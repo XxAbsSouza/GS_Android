@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:gravity="center_vertical">
+    
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,11 +15,6 @@
     app:cardElevation="4dp"
     android:layout_margin="8dp">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tituloDica"
@@ -34,5 +30,5 @@
             android:layout_height="wrap_content" />
 </androidx.cardview.widget.CardView>
 
-    </LinearLayout>
+</LinearLayout>
 
