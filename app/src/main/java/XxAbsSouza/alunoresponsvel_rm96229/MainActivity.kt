@@ -1,43 +1,34 @@
-package XxAbsSouza.alunoresponsvel_rm96229
-
+import XxAbsSouza.alunoresponsvel_rm96229.R
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import XxAbsSouza.alunoresponsvel_rm96229.ui.theme.AlunoResponsável_RM96229Theme
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var dicaAdapter: DicaAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            AlunoResponsável_RM96229Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
-                }
-            }
-        }
-    }
-}
+        setContentView(R.layout.activity_main)
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-            text = "Hello $name!",
-            modifier = modifier
-    )
-}
+        // Inicializa o RecyclerView
+        recyclerView = findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AlunoResponsável_RM96229Theme {
-        Greeting("Android")
+        // Cria uma lista de dicas
+        val dicas = listOf(
+            Dica("Use lâmpadas LED", "As lâmpadas LED consomem até 80% menos energia do que as convencionais."),
+            Dica("Desligue aparelhos em stand-by", "Evite deixar dispositivos em stand-by para economizar energia."),
+            Dica("Separe o lixo reciclável", "Faça a separação correta dos resíduos para facilitar a reciclagem."),
+            Dica("Utilize a água de forma consciente", "Feche a torneira enquanto escova os dentes ou lava a louça."),
+            Dica("Plante árvores", "O plantio de árvores ajuda a melhorar a qualidade do ar e reduzir a poluição."),
+            Dica("Compre produtos sustentáveis", "Prefira produtos ecológicos, feitos com materiais recicláveis e de baixo impacto ambiental.")
+        )
+
+        // Configura o Adapter para o RecyclerView
+        dicaAdapter = DicaAdapter(dicas)
+        recyclerView.adapter = dicaAdapter
     }
 }
