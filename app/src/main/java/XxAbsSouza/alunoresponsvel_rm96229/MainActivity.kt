@@ -1,34 +1,56 @@
-import XxAbsSouza.alunoresponsvel_rm96229.R
+package XxAbsSouza.alunoresponsvel_rm96229
+import DicasAdapter
+import XxAbsSouza.alunoresponsvel_rm96229.viewmodel.DicasViewModel
+import XxAbsSouza.alunoresponsvel_rm96229.viewmodel.DicasViewModelFactory
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var viewModel: DicasViewModel
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var dicaAdapter: DicaAdapter
-
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inicializa o RecyclerView
-        recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = "Lista de Compras"
 
-        // Cria uma lista de dicas
-        val dicas = listOf(
-            Dica("Use lâmpadas LED", "As lâmpadas LED consomem até 80% menos energia do que as convencionais."),
-            Dica("Desligue aparelhos em stand-by", "Evite deixar dispositivos em stand-by para economizar energia."),
-            Dica("Separe o lixo reciclável", "Faça a separação correta dos resíduos para facilitar a reciclagem."),
-            Dica("Utilize a água de forma consciente", "Feche a torneira enquanto escova os dentes ou lava a louça."),
-            Dica("Plante árvores", "O plantio de árvores ajuda a melhorar a qualidade do ar e reduzir a poluição."),
-            Dica("Compre produtos sustentáveis", "Prefira produtos ecológicos, feitos com materiais recicláveis e de baixo impacto ambiental.")
-        )
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val dicasAdapter = DicasAdapter { dica ->
+            viewModel.removeDica(dica)
+        }
+        recyclerView.adapter = dicasAdapter
 
-        // Configura o Adapter para o RecyclerView
-        dicaAdapter = DicaAdapter(dicas)
-        recyclerView.adapter = dicaAdapter
+        val button = findViewById<Button>(R.id.button)
+        val editText = findViewById<EditText>(R.id.editText)
+
+        button.setOnClickListener {
+            if (editText.text.isEmpty()) {
+                editText.error = "Preencha um valor"
+                return@setOnClickListener
+            }
+
+            // Adiciona o item ao ViewModel e limpa o campo de texto.
+            viewModel.addDica(editText.text.toString(),editText.text.toString())
+            editText.text.clear()
+        }
+
+        // Cria uma nova fábrica para o ViewModel.
+        val viewModelFactory = DicasViewModelFactory(application)
+        // Obtém uma instância do ViewModel.
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DicasViewModel::class.java)
+
+        // Observa as mudanças na lista de itens e atualiza o adaptador quando a lista muda.
+        viewModel.dicasLiveData.observe(this) { dicas ->
+            dicasAdapter.updateDicas(dicas)
+        }
     }
 }
